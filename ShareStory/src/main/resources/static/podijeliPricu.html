@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Podijeli priču</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/css/bootstrap-select.css" />
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Flavors&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+
+        * {
+              margin:  0;
+              padding: 0;
+              box-sizing: border-box;
+          }
+
+          body {
+               background-image: url("background.jpg");
+               background-repeat: no-repeat;
+               background-attachment: fixed;
+               background-size:cover;
+               background-position:center center;
+               justify-content: center;
+               align-items: center;
+               color:red;
+            }
+        .content1{
+               padding-top:70px;
+               display: flex;
+               flex-flow: column;
+               justify-content: center;
+               align-items: center;
+               margin-bottom: 70px;
+               color: #F3E1DD;
+        }
+        .errorClass{color: red;}
+        .mb-3{
+               width:60%;
+        }
+        #add-story-button{
+               margin-left:30%;
+               width:40%;
+        }
+    </style>
+</head>
+<body>
+<div id="header"></div>
+
+<div class="content1">
+
+       <h1>Podijelite svoju priču</h1>
+       <p>Vaša priča ne smije sadržavati govor mržnje, uvredljiv sadržaj,direktno prozivanje i slično</p>
+       <p>Priče koje ne zadovoljavaju ova pravila neće biti objavljenje.</p>
+    <div class="mb-3 was-validated">
+        <div id="forma" class="form-group">
+            <label for="author">Autor</label>
+            <input name= "author" type="text" class="form-control"  id="author">
+        </div>
+        <div class="form-group">
+            <label for="title">Naslov</label>
+            <input name= "title" type="text" class="form-control"  id="title" required>
+        </div>
+        <div class="form-group">
+            <label for="content">Sadržaj</label>
+            <textarea name= "content"  class="form-control"  id="content" required></textarea>
+
+        </div>
+        <div d-grid gap-2 col-6 mx-auto>
+            <button id="add-story-button" type="button" class="btn btn btn-warning"  >Podijeli priču</button>
+        </div>
+    </div>
+
+</div>
+
+
+
+<script>
+
+
+    $(document).ready(function(){
+        $("#add-story-button").click(function(){
+            if($("#title").val()!=="" && $("#content").val()!==""){
+            var story = {
+                        author: $("#author").val(),
+                        title: $("#title").val(),
+                        content: $("#content").val()
+                        };
+             }
+            $.ajax({
+                type: 'POST',
+                url: '/api/story',
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                data: JSON.stringify(story),
+                error: function() {
+
+                    alert("Morate popuniti polja Naslov i Sadržaj!!!");
+
+                },
+                success: function(data) {
+
+                    $("#author").val("");
+                    $("#title").val("");
+                    $('#content').val("");
+                    $("$error").remove();
+                }
+            });
+        });
+    });
+
+    $(document).ready(function(){
+     $("#header").load("header.html");
+    });
+</script>
+</body>
+</html>

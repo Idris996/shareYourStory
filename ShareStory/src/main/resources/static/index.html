@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Podijeli svoju priču</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/css/bootstrap-select.css" />
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Flavors&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Indie+Flower&family=Lobster&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Ranchers&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@100&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+            body {
+               background-image: url("background.jpg");
+               background-repeat: no-repeat;
+               background-attachment: fixed;
+               background-size:cover;
+               background-position:center center;
+
+            }
+            .stories-container{
+               padding-top:50px;
+               padding-right:20px;
+               padding-left:20px;
+               display: flex;
+               flex-flow: column;
+               justify-content: center;
+               align-items: center;
+               margin-bottom: 70px;
+               padding-bottom: 30px;
+
+         }
+           .card {
+              margin-top: 50px;
+              width: 40%;
+              height: 150px;
+              overflow: hidden ;
+              white-space: nowrap;
+              font-family: 'Noto Sans SC', sans-serif;
+              background-color:transparent;
+              border: 2px solid #E0E0CE;
+              border-radius: 8px;
+              letter-spacing: 1px;
+              color:#C5D6D8;
+              font-size:20px;
+
+         }
+           .card-text{
+              display: block;
+
+           }
+
+           .show-story{
+
+              width:100%;
+              height:100%;
+              padding-top:30px;
+              display: flex;
+              flex-flow: column;
+              justify-content: center;
+              align-items: center;
+              font-size:20px;
+           }
+           .xx{
+              padding-right:88px;
+              padding-left:40px;
+           }
+           .cardPr {
+              margin-top: 50px;
+              width:80%;
+              color:#C5D6D8;
+              height: auto;
+              overflow: auto;
+              font-size:20px;
+              font-family: 'Indie Flower', cursive;
+              font-family: 'Lobster', cursive;
+           }
+           .yy{
+               border-right: 5px solid red;
+               width:300px;
+           }
+           .btn-group {
+              padding: 15px 32px;
+              text-align: center;
+              border-radius:8px;
+              display: inline-block;
+              font-size: 16px;
+              float: left;
+              margin-left:30px;
+           }
+           #bl{margin-right:10px;}
+           .titleClass{
+              font-size:50px;
+              margin-bottom:85%;
+              padding-left:55px;
+              font-family: 'Ranchers', cursive;
+           }
+           .likesClass{
+              padding: 15px 32px;
+              text-align: center;
+              font-size: 16px;
+              float: left;
+              margin-left:30px;
+           }
+    </style>
+</head>
+<body>
+  <div id="header"></div>
+
+    <div id="content">
+
+       <div id="storiesID" class="stories-container"></div>
+
+    </div>
+
+
+
+    <script>
+
+
+    function loadStories(){
+    console.log("test");
+    $.ajax({
+        type: 'GET',
+        url: '/api/story',
+        data: {
+            format: 'json'
+        },
+        error: function() {
+            var $error = $('<h1>').text('An error has occurred');
+            $('#storiesID').append($error);
+        },
+        dataType: 'json',
+        success: function(data) {
+            $('#storiesID').empty();
+            data.forEach(element => {
+
+                var card = $('<div></div>').addClass('card text-break');
+                var body = $('<div></div>').addClass('card-body');
+                var footer = $('<div></div>').addClass('card-footer text-muted');
+
+                var id = $('<p></p>').text(element.id);
+                var approved = $('<p></p>').text(element.approved);
+                var author = $('<p></p>').text(element.author);
+                var title = $('<h5></h5>').text(element.title);
+                var content = $('<p></p>').text(element.content);
+                var readMore = $("<a id='readMore' class='btn btn-secondary' onclick ='showStory("+element.id+")'>Pročitaj</a>");
+
+
+                footer.append(readMore);
+                body.append(title);
+                body.append(content);
+                card.append(body);
+                card.append(footer);
+
+                if(element.approved == true){
+                   $('#storiesID').append(card);
+                }
+
+
+            });
+
+        }
+    });
+}
+
+
+
+function showStory(id){
+     $.ajax({
+            type: 'GET',
+            url: '/api/story/' + id ,
+            data: {
+            format: 'json'
+            },
+            success: function(data) {
+
+                  var content = $('<div></div>').addClass('container show-story');
+                  var div = $('<div></div>').addClass('row cardPr');
+                  var div1 = $('<div></div>').addClass('col yy');
+                  var div2 = $('<div></div>').addClass('col');
+                  var div3 = $('<div></div>').addClass('likesClass');
+                  var buttonGroup = $('<div></div>').addClass('btn-group');
+
+
+                  var title1 = $('<h1></h1>').text(data.title).addClass('titleClass');
+                  console.log(data.title);
+                  if(data.author ==""){
+                    data.author="Anonimno";
+                  }
+                  console.log(data.author);
+
+                  var par = $('<p></p>').text("Puni sadržaj priče...");
+                  var author1 = $('<p></p>').text(data.author);
+                  var content1 = $('<p></p>').text(data.content).addClass('card-text');
+                  var date = $('<p></p>').text(data.date);
+                  var likes = $('<span></span>').text(data.likes).addClass('xx');
+
+                  var dislikes = $('<span></span>').text(data.dislikes);
+                  var likeButton = $("<button type='button' id='bl' class='btn btn-success' onclick ='likeStory("+data.id+")' >Odobravam</button>");
+
+                  var dislikeButton = $("<button type='button' id='bdis' class='btn btn-danger' onclick ='dislikeStory("+data.id+") '>Osuđujem</button>");
+
+
+                  $('#content').empty();
+
+                  buttonGroup.append(likeButton);
+                  buttonGroup.append(dislikeButton);
+                  div1.append(title1);
+                  div3.append(likes);
+                  div3.append(dislikes);
+                  div1.append(div3);
+                  div1.append(buttonGroup);
+                  div2.append(par);
+                  div2.append(content1);
+                  div2.append(author1);
+                  div2.append(date);
+                  div.append(div1);
+                  div.append(div2);
+
+                  content.append(div);
+                  $('#content').append(content);
+
+
+
+
+                  console.log(id);
+
+            }
+        });
+}
+
+
+
+
+   function likeStory(id){
+    console.log("like prica: " + id);
+    $.ajax({
+            type: 'PUT',
+            url: '/api/story/like/' + id,
+            success: function(data) {
+                showStory(id);
+
+
+            }
+        });
+}
+
+  function dislikeStory(id){
+    console.log("like prica: " + id);
+    $.ajax({
+            type: 'PUT',
+            url: '/api/story/dislike/' + id,
+            success: function(data) {
+                showStory(id);
+            }
+        });
+}
+
+    $(document).ready(function(){
+     $("#header").load("header.html");
+    });
+
+    $(document).ready(function(){
+    loadStories();
+});
+</script>
+
+</body>
+</html>

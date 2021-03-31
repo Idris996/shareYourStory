@@ -1,0 +1,13 @@
+* {
+    margin:  0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+#storyHeader {
+  font-family: 'Flavors', cursive;
+  font-size: 50px;
+  color: #B0B2B8;
+}
+
